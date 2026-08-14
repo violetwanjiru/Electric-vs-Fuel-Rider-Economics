@@ -77,7 +77,10 @@ To evaluate rider economics, the analysis focused on the following metrics:
 
 ## Dashboard
 
+[![Rider Economics Dashboard](./rider_economics.png)](https://app.powerbi.com/groups/me/reports/b1f33b6b-4aab-4632-84c2-28179bfcfe60/e998a456027756bbd04d?experience=power-bi)
+
 The interactive dashboard is available in [Power BI](https://app.powerbi.com/groups/me/reports/b1f33b6b-4aab-4632-84c2-28179bfcfe60/e998a456027756bbd04d?experience=power-bi).
+
 
 The dashboard allows users to:
 
