@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rider economics: electric vs petrol motorcycle taxis in Nairobi</title>
+<style>
+:root{--bg:#f4f7f5;--ink:#14201c;--mute:#566660;--line:#d5dfda;--e:#0b7f63;--i:#c2601b;--panel:#fff}
+@media (prefers-color-scheme:dark){:root{--bg:#101815;--ink:#e8efeb;--mute:#9bacA5;--line:#2a3833;--e:#3cc9a1;--i:#f0914f;--panel:#17221e}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:760px;margin:0 auto;padding:48px 20px 72px}
+h1,h2{font-family:"Iowan Old Style",Georgia,serif;line-height:1.2;margin:0}
+h1{font-size:clamp(28px,5vw,40px);margin-bottom:16px}
+h2{font-size:22px;margin:48px 0 10px}
+p{margin:0 0 12px;max-width:68ch}
+.lede{font-size:18px}
+.e{color:var(--e);font-weight:600}.i{color:var(--i);font-weight:600}
+.bar-wrap{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:20px;margin-top:16px}
+.controls{display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between;margin-bottom:18px}
+.seg{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg button{font:inherit;font-size:14px;background:none;color:var(--mute);border:0;padding:7px 12px;cursor:pointer;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--e);outline-offset:2px}
+.row{margin-bottom:18px}
+.row .lab{font-size:14px;color:var(--mute);margin-bottom:5px}
+.line{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.track{flex:1;height:22px;background:var(--bg);border-radius:3px}
+.fill{height:100%;border-radius:3px;transition:width .35s}
+.val{width:84px;font-variant-numeric:tabular-nums;font-size:14px;text-align:right}
+.who{width:64px;font-size:13px;color:var(--mute)}
+.take{border-left:3px solid var(--ink);padding-left:12px;margin:6px 0 0;font-size:15px}
+.whatif{margin-top:24px}
+.whatif output{font-weight:700}
+input[type=range]{width:100%;accent-color:var(--e);margin:8px 0}
+.mark{position:relative;height:22px;background:var(--bg);border-radius:3px;margin-top:6px}
+.mark .fill{background:var(--e)}
+.mark .ref{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--i)}
+.small{font-size:14px;color:var(--mute)}
+ul{padding-left:20px;max-width:68ch}li{margin-bottom:8px}
+a{color:var(--e)}
+footer{margin-top:48px;border-top:1px solid var(--line);padding-top:16px;font-size:14px;color:var(--mute)}
+@media (prefers-reduced-motion:reduce){.fill{transition:none}}
+@media (max-width:520px){.who{display:none}.val{width:72px}}
+</style>
+</head>
+<body>
+<main>
+<h1>Do electric motorcycles pay better than petrol for Nairobi boda boda riders?</h1>
+<p class="lede">Electric riders earn <span class="e">KES 837</span> a day against <span class="i">KES 996</span> for petrol riders. Per kilometre they are almost level, so the gap is about distance, not cost.</p>
+<p class="small">Violet Mutuku, data analyst. 120 GPS-tracked riders, Nairobi Motorcycle Transit Comparison Dataset (Mendeley Data, 2023).</p>
+
+<h2>The question</h2>
+<p>E-mobility operators want to know if electrifying a fleet makes sense for the rider. Electric bikes cost more upfront, so the question is whether day-to-day economics can justify the premium, and what drives any gap.</p>
+
+<h2>The answer</h2>
+<p>Pick a measure and a rider type to see it.</p>
+<div class="bar-wrap">
+  <div class="controls">
+    <div class="seg" id="metric" role="group" aria-label="Measure">
+      <button data-k="profit" aria-pressed="true">Daily profit</button>
+      <button data-k="perkm" aria-pressed="false">Per kilometre</button>
+      <button data-k="util" aria-pressed="false">Distance</button>
+      <button data-k="margin" aria-pressed="false">Margin</button>
+    </div>
+    <div class="seg" id="type" role="group" aria-label="Rider type">
+      <button data-t="both" aria-pressed="true">Both</button>
+      <button data-t="e" aria-pressed="false">Electric</button>
+      <button data-t="i" aria-pressed="false">Petrol</button>
+    </div>
+  </div>
+  <div id="rows"></div>
+  <p class="take" id="take"></p>
+</div>
+
+<div class="bar-wrap whatif">
+  <label for="km"><strong>What if electric riders drove further?</strong> Electric daily distance: <output id="kmo">75</output> km</label>
+  <input type="range" id="km" min="60" max="100" value="75" step="1">
+  <div class="mark"><div class="fill" id="wf" style="width:0"></div><div class="ref" id="wr" title="Petrol average"></div></div>
+  <p id="wtxt" style="margin-top:10px" aria-live="polite"></p>
+  <p class="small">Projected profit is distance multiplied by electric profit per kilometre (KES 11.18). The orange line is the petrol average of KES 996. It assumes profit per kilometre stays constant as distance grows.</p>
+</div>
+
+<h2>How I got there</h2>
+<p>I compared daily profit, cost per kilometre and distance for electric and petrol riders over the same period, to separate cost, revenue and utilisation as causes of the gap.</p>
+<p>Financial figures came from daily phone surveys, and some were inconsistent, such as zero revenue on a 90 km trip. I corrected these records using fuel-consumption benchmarks for petrol and published battery-swap pricing for electric, rather than removing them, so the sample size stayed intact.</p>
+<p>Electric energy cost per kilometre is 40% lower and maintenance 81% lower. Electric keeps 73.8% of revenue as profit against 59.9% for petrol. Electric riders also have a safer floor: a worst day of KES 50, against a loss of KES 8,800 for petrol.</p>
+<p><a id="pbi" href="YOUR_POWER_BI_LINK">Open the full Power BI dashboard</a></p>
+
+<h2>What I'd do next</h2>
+<ul>
+<li>Work on distance first. Costs are already near parity, so more subsidy on energy or maintenance adds little. Closing the 10 km gap to 85 km a day is the larger lever.</li>
+<li>Find out why electric riders drive less: range, swap-station access, route assignment or learning curve. Each needs a different fix.</li>
+<li>Compare fleets on profit per kilometre, not daily profit, because daily profit depends on how much a rider chooses to drive.</li>
+</ul>
+
+<h2>Caveats</h2>
+<p>Only 9 electric motorcycles were tracked against more than 100 petrol ones, so treat the findings as directional. Revenue and costs are survey-based and partly corrected by estimate. A larger, longer electric cohort is needed before a large fleet decision.</p>
+
+<footer>Built by Violet Mutuku. Data: Nairobi Motorcycle Transit Comparison Dataset, Mendeley Data (2023).</footer>
+</main>
+<script>
+const V={
+profit:{rows:[{l:"Average daily profit",e:837,i:996,f:v=>"KES "+v}],take:"Petrol riders earn KES 159 more per day. The next views show why."},
+perkm:{rows:[{l:"Revenue per km",e:15.16,i:19.50},{l:"Energy cost per km",e:3.65,i:6.11},{l:"Maintenance per km",e:0.32,i:1.72},{l:"Profit per km",e:11.18,i:11.68}].map(r=>({...r,f:v=>"KES "+v.toFixed(2)})),take:"Electric earns less per kilometre but costs far less to run, so profit per kilometre differs by only KES 0.50."},
+util:{rows:[{l:"Average distance per day",e:75,i:85,f:v=>v+" km"}],take:"Electric riders cover 12% less distance. That explains most of the daily profit gap."},
+margin:{rows:[{l:"Share of revenue kept as profit",e:73.8,i:59.9,f:v=>v+"%"}],take:"Electric keeps more of every shilling it earns, because its running costs are lower."}
+};
+let k="profit",t="both";
+const $=s=>document.querySelector(s);
+function draw(){
+  const d=V[k],mx=Math.max(...d.rows.flatMap(r=>[r.e,r.i]));
+  $("#rows").innerHTML=d.rows.map(r=>{
+    const one=(who,c,v,n)=>`<div class="line"><span class="who">${n}</span><div class="track"><div class="fill" style="width:${v/mx*100}%;background:var(${c})"></div></div><span class="val">${r.f(v)}</span></div>`;
+    return `<div class="row"><div class="lab">${r.l}</div>${t!="i"?one("e","--e",r.e,"Electric"):""}${t!="e"?one("i","--i",r.i,"Petrol"):""}</div>`}).join("");
+  $("#take").textContent=d.take;
+}
+function wire(id,attr,set){document.querySelectorAll(id+" button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll(id+" button").forEach(x=>x.setAttribute("aria-pressed",x===b));set(b.dataset[attr]);draw()})}
+wire("#metric","k",v=>k=v);wire("#type","t",v=>t=v);
+function wi(){
+  const km=+$("#km").value,p=Math.round(km*11.18),g=p-996;
+  $("#kmo").textContent=km;
+  $("#wf").style.width=Math.min(p/1200*100,100)+"%";
+  $("#wr").style.left=(996/1200*100)+"%";
+  $("#wtxt").innerHTML=`Projected electric profit: <strong>KES ${p}</strong> a day. `+(g>=0?`That is KES ${g} above the petrol average.`:`That is KES ${-g} below the petrol average. Break-even is about 89 km a day.`);
+}
+$("#km").oninput=wi;draw();wi();
+</script>
+</body>
+</html>
