@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Should a Nairobi boda boda rider switch from petrol to electric?</title>
+<meta name="description" content="Rider economics dashboard: electric against petrol motorcycles for Nairobi boda boda riders, from GPS trips and daily financial surveys.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Segoe+UI&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e6e8e6;--panel:#fff;--mint:#e9f2eb;--el:#4d7f5e;--ice:#c8a548;--ink:#1d2a22;--muted:#5d6b62;--line:#d6dcd7;--g1:#9aa7a0;--g2:#6f7d75}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 .94rem/1.5 "Public Sans","Segoe UI",system-ui,sans-serif}
+main{max-width:1180px;margin:0 auto;padding:1.5rem 1.1rem 2.5rem}
+h1{color:var(--el);font-size:clamp(1.6rem,3.4vw,2.35rem);line-height:1.12;margin:0;max-width:22ch;font-weight:700}
+h2{font-size:1rem;margin:0 0 .15rem;font-weight:600}
+.sub{color:var(--muted);font-size:.8rem;margin:0 0 .6rem}
+.top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:1.5rem;margin-bottom:1rem;align-items:start}
+.answer{font-size:1rem;margin:.65rem 0 .2rem}.meta{color:var(--muted);font-size:.82rem;margin:0}
+.decision{background:var(--panel);border-left:5px solid var(--ice);padding:.8rem 1rem;font-size:.9rem}
+.decision b{display:block;margin-bottom:.2rem;color:var(--muted);font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:.7rem;margin-bottom:.7rem}
+.k{background:var(--mint);border:1px solid var(--line);border-radius:4px;padding:.65rem .85rem;box-shadow:0 2px 5px rgba(0,0,0,.12)}
+.k .l{color:var(--muted);font-size:.78rem;display:block}.k .v{font-size:1.9rem;font-weight:600;line-height:1.2;display:block}
+.k .v i{font-style:normal;font-size:.95rem;color:var(--muted);font-weight:400}.k .s{color:var(--muted);font-size:.76rem}
+.el{color:var(--el)}.ic{color:#a98a2c}
+.grid{display:grid;gap:.7rem;margin-bottom:.7rem}.g1{grid-template-columns:minmax(0,1fr) minmax(0,1.5fr)}.g2{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr)}.g3{grid-template-columns:repeat(2,minmax(0,1fr))}
+.p{background:var(--panel);border-radius:4px;padding:.85rem 1rem;min-width:0;border:1px solid var(--line)}
+.pair{display:flex;gap:1.5rem;justify-content:space-around}.pair>div{flex:1}
+.vb{display:flex;align-items:flex-end;justify-content:space-around;gap:.8rem;height:150px;border-bottom:1px solid var(--line);padding-top:1.2rem}
+.vb div{flex:1;max-width:84px;color:var(--ink);text-align:center;font-weight:600;position:relative;border-radius:2px 2px 0 0}
+.vb div span{position:absolute;top:-1.15rem;left:0;right:0;font-size:.82rem}
+.vl{display:flex;justify-content:space-around;color:var(--muted);font-size:.78rem;margin-top:.25rem}
+svg{width:100%;height:auto;display:block}.gl{stroke:var(--line)}.ax{fill:var(--muted);font:11px "Public Sans",sans-serif}
+.tabs{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden;margin:.1rem 0 .5rem}
+.tabs button{font:inherit;font-size:.82rem;padding:.35rem .8rem;border:0;background:#fff;cursor:pointer;color:var(--ink)}
+.tabs button[aria-pressed=true]{background:var(--el);color:#fff}
+.tabs button:focus-visible,input:focus-visible{outline:3px solid var(--ice);outline-offset:2px}
+.st{display:grid;grid-template-columns:64px 1fr;gap:.6rem;align-items:center;margin:.55rem 0;font-size:.85rem}
+.sb{display:flex;height:34px;border-radius:2px;overflow:hidden}.sb span{display:block;color:#fff;font-size:.74rem;line-height:34px;text-align:center;white-space:nowrap;overflow:hidden}
+.key{display:flex;gap:1rem;flex-wrap:wrap;color:var(--muted);font-size:.76rem;margin-top:.3rem}.key i{display:inline-block;width:.65rem;height:.65rem;margin-right:.3rem;vertical-align:-1px}
+.calc input{width:100%;accent-color:var(--el);margin:.4rem 0}
+.big{font-size:1.9rem;font-weight:600;line-height:1.2}.res{display:flex;gap:1.5rem;flex-wrap:wrap;margin:.3rem 0}
+.rng{position:relative;height:30px;background:var(--bg);border-radius:2px;margin:.3rem 0 .1rem}
+.rng b{position:absolute;top:5px;height:20px;border-radius:2px}.rng u{position:absolute;top:2px;height:26px;width:3px;background:var(--ink)}
+table{border-collapse:collapse;width:100%;font-size:.82rem}th,td{text-align:right;padding:.32rem .45rem;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}th{color:var(--muted);font-weight:600}.tw{overflow-x:auto}
+.note{color:var(--muted);font-size:.78rem;margin:.5rem 0 0}
+footer{color:var(--muted);font-size:.78rem;margin-top:.6rem}
+@media (max-width:860px){.top,.g1,.g2,.g3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main>
+
+<header class="top">
+  <div>
+    <h1>Should a Nairobi boda boda rider switch from petrol to electric?</h1>
+    <p class="answer"><b>Not yet, on daily profit.</b> Electric riders earn KES 837 a day against KES 996 on petrol because they drive 75 km against 85. Per kilometre the two are nearly level.</p>
+    <p class="meta">120 riders (9 electric, more than 100 petrol), Nairobi, 2023 study. GPS trip records and daily financial surveys. Amounts in Kenya shillings (KES).</p>
+  </div>
+  <div class="decision">
+    <b>The decision this supports</b>
+    A rider should switch to electric only if their routes let them cover about 89 km a day with a swap station on the way; below that, petrol still earns more. Per kilometre the two are nearly level (KES 11.18 electric against 11.68 petrol), electric costs 40% less for energy and 81% less to maintain, and the KES 159 daily gap comes from electric riders driving 75 km against 85. The data cannot say why electric riders drive less, and only 9 electric motorcycles were tracked, so treat the 89 km break-even as directional. Operators should share swap-station and charging records for the tracked electric riders before the next fleet purchase, so the cause can be found.
+  </div>
+</header>
+
+<section class="kpis" id="kpis" aria-label="Key figures"></section>
+
+<section class="grid g1">
+  <div class="p">
+    <h2>Why the gap? Daily profit and distance driven</h2>
+    <p class="sub">The profit gap follows the distance gap.</p>
+    <div class="pair">
+      <div><div class="vb" id="vp"></div><div class="vl"><span>Petrol</span><span>Electric</span></div><p class="sub" style="text-align:center;margin-top:.2rem">Average daily profit (KES)</p></div>
+      <div><div class="vb" id="vd"></div><div class="vl"><span>Petrol</span><span>Electric</span></div><p class="sub" style="text-align:center;margin-top:.2rem">Average distance per day (km)</p></div>
+    </div>
+  </div>
+  <div class="p">
+    <h2>Daily profit by daily distance</h2>
+    <p class="sub">Both rise with distance at a similar pace. Approximate: read from the original Power BI visual.</p>
+    <div id="line"></div>
+    <div class="key"><span><i style="background:var(--el)"></i>Electric</span><span><i style="background:var(--ice)"></i>Petrol</span></div>
+  </div>
+</section>
+
+<section class="grid g2">
+  <div class="p">
+    <h2>Where each shilling of revenue goes</h2>
+    <div class="tabs" role="group" aria-label="Basis"><button id="t1" aria-pressed="true">Per day (KES)</button><button id="t2" aria-pressed="false">Per kilometre (KES)</button></div>
+    <div id="stack"></div>
+    <div class="key"><span><i style="background:var(--g1)"></i>Energy or fuel</span><span><i style="background:var(--g2)"></i>Maintenance</span><span><i style="background:var(--el)"></i>Electric profit</span><span><i style="background:var(--ice)"></i>Petrol profit</span></div>
+    <p class="note">Electric energy cost per km is 40% lower and maintenance 81% lower, so its profit margin is 73.8% against 59.9%. Petrol earns more revenue per km (19.50 against 15.16), which offsets its higher costs.</p>
+  </div>
+  <div class="p calc">
+    <h2>Check your own daily distance</h2>
+    <p class="sub">Estimated electric profit at the average KES 11.18 per km. Petrol average is KES 996 a day.</p>
+    <label for="km">Kilometres a day on electric: <b id="kmv">75</b> km</label>
+    <input id="km" type="range" min="40" max="120" value="75">
+    <div class="res"><div><span class="sub">Electric, estimated</span><div class="big el" id="ce">838</div></div><div><span class="sub">Against petrol average</span><div class="big" id="cg">-158</div></div></div>
+    <p class="note" id="cm"></p>
+    <p class="note">Break-even is 996 ÷ 11.18 = about 89 km a day. This assumes profit per km holds at any distance, and it leaves out the upfront price premium, which is not in this data.</p>
+  </div>
+</section>
+
+<section class="grid g3">
+  <div class="p">
+    <h2>Typical daily profit: middle half of riders</h2>
+    <p class="sub">Bar = first to third quartile, line = median (KES a day).</p>
+    <div id="rng"></div>
+    <div class="tw"><table><thead><tr><th>Type</th><th>Min</th><th>Q1</th><th>Median</th><th>Q3</th><th>Max</th></tr></thead><tbody id="dist"></tbody></table></div>
+    <p class="note">Extreme values remain in the petrol group (as low as -8,800 a day), so medians are more reliable than averages here.</p>
+  </div>
+  <div class="p">
+    <h2>Unit economics</h2>
+    <div class="tw"><table><thead><tr><th>KES</th><th>Electric</th><th>Petrol</th></tr></thead><tbody id="ue"></tbody></table></div>
+    <p class="note">Survey figures that were inconsistent, such as zero revenue on a 90 km trip, were corrected with fuel-consumption benchmarks and published battery-swap prices, not deleted.</p>
+  </div>
+</section>
+
+<footer>Rebuilt from the Power BI dashboard on the same data. Static page, not a live connection. Edit the data block at the bottom of this file to refresh it. Derived: break-even distance and the calculator.</footer>
+</main>
+
+<script>
+// Figures from the Power BI dashboard. "approx" series were read off the original visual: replace with exported values.
+const D={
+ el:{name:"Electric",c:"#4d7f5e",profit:837,km:75,pk:[15.16,3.65,0.32,11.18],pd:[1134,273,24,837],q:[50,462.5,792.5,1137.5,4800],approx:[250,400,850,700,1000,1200]},
+ ice:{name:"Petrol",c:"#c8a548",profit:996,km:85,pk:[19.50,6.11,1.72,11.68],pd:[1663,521,146,996],q:[-8800,500,900,1467,7000],approx:[400,500,600,850,1100,1450]}
+};
+const f=n=>n.toLocaleString("en-US",{maximumFractionDigits:2}),$=id=>document.getElementById(id);
+
+$("kpis").innerHTML=[
+ ["Electric daily profit",`837 <i>KES</i>`,"average per rider","el"],
+ ["Petrol daily profit",`996 <i>KES</i>`,"average per rider","ic"],
+ ["Daily gap",`-159 <i>KES</i>`,"electric against petrol",""],
+ ["Profit per km",`<span class="el">11.18</span> <i>vs</i> <span class="ic">11.68</span>`,"electric against petrol",""],
+ ["Distance per day",`<span class="el">75</span> <i>vs</i> <span class="ic">85</span> <i>km</i>`,"electric against petrol",""],
+ ["Electric break-even distance",`89 <i>km</i>`,"to match petrol’s 996 a day (derived)",""]
+].map(k=>`<div class="k"><span class="l">${k[0]}</span><span class="v ${k[3]}">${k[1]}</span><span class="s">${k[2]}</span></div>`).join("");
+
+function vbars(id,a,b,max){$(id).innerHTML=[a,b].map(r=>`<div style="height:${r[0]/max*100}%;background:${r[1]}"><span>${f(r[0])}</span></div>`).join("")}
+vbars("vp",[D.ice.profit,D.ice.c],[D.el.profit,D.el.c],1100);
+vbars("vd",[D.ice.km,D.ice.c],[D.el.km,D.el.c],100);
+
+(function(){const W=560,H=250,L=40,R=64,T=14,B=34,iw=W-L-R,ih=H-T-B,mx=1600,lab=["0-20","21-40","41-60","61-80","81-100","100+"];
+ const x=i=>L+iw*(i+.5)/6,y=v=>T+ih-v/mx*ih;let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Approximate daily profit by daily distance for electric and petrol">`;
+ [0,400,800,1200,1600].forEach(t=>s+=`<line x1="${L}" x2="${W-R}" y1="${y(t)}" y2="${y(t)}" class="gl"/><text x="${L-6}" y="${y(t)+4}" class="ax" text-anchor="end">${t}</text>`);
+ lab.forEach((l,i)=>s+=`<text x="${x(i)}" y="${H-14}" class="ax" text-anchor="middle">${l}</text>`);
+ [D.ice,D.el].forEach(t=>{s+=`<polyline fill="none" stroke="${t.c}" stroke-width="2.8" points="${t.approx.map((v,i)=>x(i)+","+y(v)).join(" ")}"/>`+t.approx.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="4.5" fill="${t.c}"><title>${t.name}, ${lab[i]} km: about ${v} KES a day</title></circle>`).join("")+`<text x="${x(5)+10}" y="${y(t.approx[5])+4}" class="ax" fill="${t.c}" style="fill:${t.c};font-weight:600">${t.name}</text>`});
+ $("line").innerHTML=s+`<text x="${L+iw/2}" y="${H-1}" class="ax" text-anchor="middle">Daily distance (km)</text></svg>`})();
+
+function stack(mode){const k=mode==="pk"?"pk":"pd",max=Math.max(D.el[k][0],D.ice[k][0]);
+ $("stack").innerHTML=[D.ice,D.el].map(t=>{const v=t[k],w=x=>x/max*100;
+  return `<div class="st"><b>${t.name}</b><div><div class="sb" role="img" aria-label="${t.name} revenue split"><span style="width:${w(v[1])}%;background:var(--g1)">${f(v[1])}</span><span style="width:${w(v[2])}%;background:var(--g2)">${v[2]>=20||mode==="pk"&&v[2]>=1?f(v[2]):""}</span><span style="width:${w(v[3])}%;background:${t.c}">${f(v[3])} profit</span></div><span class="sub">Revenue ${f(v[0])}</span></div></div>`}).join("")}
+stack("pd");
+[["t1","pd"],["t2","pk"]].forEach(([id,m])=>$(id).addEventListener("click",()=>{["t1","t2"].forEach(o=>$(o).setAttribute("aria-pressed",o===id));stack(m)}));
+
+function calc(){const km=+$("km").value,e=km*11.18,g=e-996;$("kmv").textContent=km;$("ce").textContent=f(Math.round(e));$("cg").textContent=(g>=0?"+":"")+f(Math.round(g));$("cg").className="big "+(g>=0?"el":"");
+ $("cm").textContent=g>=0?"At this distance electric would match or beat the petrol average.":`At this distance electric would earn about KES ${f(Math.round(-g))} a day less than the petrol average.`}
+$("km").addEventListener("input",calc);calc();
+
+(function(){const lo=0,hi=1600,p=v=>(v-lo)/(hi-lo)*100;$("rng").innerHTML=[D.ice,D.el].map(t=>`<div class="sub" style="margin:.4rem 0 0">${t.name}: ${f(t.q[1])} to ${f(t.q[3])}, median ${f(t.q[2])}</div><div class="rng"><b style="left:${p(t.q[1])}%;width:${p(t.q[3])-p(t.q[1])}%;background:${t.c}"></b><u style="left:${p(t.q[2])}%"></u></div>`).join("")+`<div class="vl" style="justify-content:space-between"><span>0</span><span>800</span><span>1,600</span></div>`;
+ $("dist").innerHTML=[D.ice,D.el].map(t=>`<tr><td>${t.name}</td>${t.q.map(v=>`<td>${f(v)}</td>`).join("")}</tr>`).join("")})();
+
+$("ue").innerHTML=[["Revenue per km",1,0],["Energy or fuel per km",1,1],["Maintenance per km",1,2],["Profit per km",1,3]].map(r=>`<tr><td>${r[0]}</td><td>${f(D.el.pk[r[2]])}</td><td>${f(D.ice.pk[r[2]])}</td></tr>`).join("")+
+ [["Revenue per day",0],["Energy or fuel per day",1],["Maintenance per day",2],["Profit per day",3]].map(r=>`<tr><td>${r[0]}</td><td>${f(D.el.pd[r[1]])}</td><td>${f(D.ice.pd[r[1]])}</td></tr>`).join("");
+</script>
+</body>
+</html>
