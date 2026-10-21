@@ -1,6 +1,6 @@
 # Should a Nairobi boda boda rider switch from petrol to electric?
 
-**[View the live dashboard](https://YOUR-USERNAME.github.io/Electric-vs-Fuel-Rider-Economics/)**
+**[View the live dashboard]([https://YOUR-USERNAME.github.io/Electric-vs-Fuel-Rider-Economics/](https://violetwanjiru.github.io/Electric-vs-Fuel-Rider-Economics/))**
 
 Not yet, on daily profit. Electric riders in this study earn KES 837 a day against KES 996 for petrol riders, a gap of KES 159, and the whole gap comes from distance: electric riders drive 75 km a day against 85 km. Per kilometre the two are nearly level, at KES 11.18 for electric and KES 11.68 for petrol, so the switch pays only if a rider can cover about 89 km a day.
 
